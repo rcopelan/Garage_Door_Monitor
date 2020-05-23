@@ -1,0 +1,24 @@
+[email]
+email1     = both
+email2     = closed
+ 
+ 
+
+[smtp]
+smtp_server   = smtp.gmail.com
+smtp_port     = 587
+smtp_user     = user for the smtp server
+smtp_password = password for the smtp server
+
+[mqtt]
+broker_address = Broker IP address
+
+[sensor]
+door_pin = 23   #Pi GPIO pin for the door sensor
+
+[flags]
+debug_flag       = False
+send_to_Adafruit = True
+ 
+[aio]
+ADAFRUIT_IO_KEY = key for the Adafruit IO API

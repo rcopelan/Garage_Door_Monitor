@@ -1,1 +1,5 @@
-#
+#  Python requirements for Door_Monitor.py
+adafruit-io
+paho-mqtt
+RPi.GPIO
+
