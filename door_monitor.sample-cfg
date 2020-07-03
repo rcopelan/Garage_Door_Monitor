@@ -19,6 +19,7 @@ door_pin = 23   #Pi GPIO pin for the door sensor
 [flags]
 debug_flag       = False
 send_to_Adafruit = True
+publish_MQTT     = True
  
 [aio]
 ADAFRUIT_IO_KEY = key for the Adafruit IO API

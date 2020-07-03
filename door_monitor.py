@@ -6,8 +6,8 @@
 # 20191001 rcopelan: added timestamp to Robert's SMS message
 # 20200522 rcopelan: updated config to come from a separate file, loop sending email with a
 #                    refresh on config when door changes state
+# 20200703 rcopelan: add publish_MQTT boolean config flag
 #
-
 import configparser
 #import datetime
 #from email.mime.text import MIMEText
@@ -73,10 +73,11 @@ def main():
     ADAFRUIT_IO_KEY = config.get('aio', 'ADAFRUIT_IO_KEY')
     debug_flag = config.getboolean('flags', 'debug_flag')
     send_to_adafruit = config.getboolean('flags', 'send_to_Adafruit')
-
-    client = mqtt.Client("G1") #create new instance
-    client.on_connect = on_connect
-    client.connect(broker_address) #connect to broker
+    publish_MQTT = config.getboolean('flags','publish_MQTT') 
+    if publish_MQTT:
+        client = mqtt.Client("G1") #create new instance
+        client.on_connect = on_connect
+        client.connect(broker_address) #connect to broker
 
     syslog.syslog(syslog.LOG_ERR, 'Starting ' + __file__)
     #
@@ -110,12 +111,13 @@ def main():
             if debug_flag:
                 print("Door State changed to: %s" % current_door_state)
             aio_msg = new_door_state
-            client.reconnect()
-            client.publish("home/garage/door/status", current_door_state)
-            client.publish("log/garage/door/status", current_door_state)
-            client.publish("homie/garage/$nodes", "door", retain=True)
-            client.publish("homie/garage/door/$properties", "status", retain=True)
-            client.publish("homie/garage/door/status", current_door_state, retain=True)
+            if (publish_MQTT):
+                client.reconnect()
+                client.publish("home/garage/door/status", current_door_state)
+                client.publish("log/garage/door/status", current_door_state)
+                client.publish("homie/garage/$nodes", "door", retain=True)
+                client.publish("homie/garage/door/$properties", "status", retain=True)
+                client.publish("homie/garage/door/status", current_door_state, retain=True)
 
             send_sms_email(filepath, new_door_state)
 
